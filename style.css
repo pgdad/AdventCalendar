@@ -19,20 +19,30 @@ html, body { margin: 0; }
 
 body {
   min-height: 100vh;
-  background:
-    radial-gradient(ellipse at 50% -10%, rgba(241, 219, 160, .22), transparent 55%),
-    linear-gradient(180deg, var(--night) 0%, var(--night-2) 70%, #1b2a22 100%);
-  background-attachment: fixed;
+  background: var(--night);
   color: var(--parchment);
   font-family: "Cormorant Garamond", Georgia, serif;
   font-size: 18px;
   line-height: 1.5;
   overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+/* Fixed sky layer (background-attachment: fixed is unreliable on iOS Safari) */
+body::before {
+  content: "";
+  position: fixed; inset: 0;
+  z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse at 50% -10%, rgba(241, 219, 160, .22), transparent 55%),
+    linear-gradient(180deg, var(--night) 0%, var(--night-2) 70%, #1b2a22 100%);
 }
 
 /* Gentle falling snow made from layered radial gradients */
 .snow {
-  position: fixed; inset: -100px 0 0 0;
+  position: fixed; inset: -250px 0 0 0;
   pointer-events: none; z-index: 0;
   background-image:
     radial-gradient(2px 2px at 20px 30px, #fff, transparent),
@@ -93,7 +103,7 @@ h1 {
 
 .sim-banner {
   max-width: 720px;
-  margin: 0 auto 16px;
+  margin: 0 16px 16px;
   padding: 10px 16px;
   border: 1px dashed var(--gold);
   border-radius: 8px;
@@ -102,6 +112,7 @@ h1 {
   font-size: 16px;
 }
 .sim-banner a { color: var(--gold-soft); }
+@media (min-width: 752px) { .sim-banner { margin: 0 auto 16px; } }
 .sim-banner[hidden] { display: none; }
 
 /* ---------- Calendar grid ---------- */
@@ -134,7 +145,9 @@ main { padding: 0 16px 32px; }
   color: inherit;
   perspective: 700px;
   background: transparent;
+  display: block;
 }
+.calendar li { display: block; min-width: 0; }
 .door:focus-visible { outline: 3px solid var(--gold-soft); outline-offset: 3px; }
 
 .door .face {
@@ -181,7 +194,10 @@ main { padding: 0 16px 32px; }
   0%, 100% { box-shadow: 0 0 0 4px rgba(217,173,85,.18), 0 0 22px rgba(241,219,160,.4); }
   50% { box-shadow: 0 0 0 6px rgba(217,173,85,.28), 0 0 42px rgba(241,219,160,.75); }
 }
-.door.today:hover .face { transform: rotateY(-14deg); }
+@media (hover: hover) {
+  .door.today:hover .face { transform: rotateY(-14deg); }
+  .door.past:hover .face { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,.35); }
+}
 
 /* Past: opened, parchment within */
 .door.past .face {
@@ -194,7 +210,6 @@ main { padding: 0 16px 32px; }
 }
 .door.past .num { color: var(--crimson); }
 .door.past .label { color: var(--evergreen); }
-.door.past:hover .face { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,.35); }
 
 /* Christmas Day stands out */
 .calendar li.christmas-cell { grid-column: 1 / -1; }
@@ -215,6 +230,8 @@ main { padding: 0 16px 32px; }
   border: none;
   padding: 0;
   width: min(560px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+  overflow: auto;
   border-radius: 14px;
   background: transparent;
   color: var(--ink);
@@ -235,7 +252,8 @@ main { padding: 0 16px 32px; }
   box-shadow: inset 0 0 0 6px var(--parchment), inset 0 0 0 7px rgba(122,20,36,.35);
 }
 .close {
-  position: absolute; top: 8px; right: 12px;
+  position: absolute; top: 4px; right: 6px;
+  width: 44px; height: 44px;
   border: none; background: none;
   font-size: 30px; line-height: 1;
   color: var(--crimson); cursor: pointer;
@@ -298,7 +316,8 @@ main { padding: 0 16px 32px; }
   border: none;
   color: var(--crimson);
   cursor: pointer;
-  padding: 4px 6px;
+  padding: 10px 8px;
+  min-height: 44px;
 }
 .dialog-nav button:disabled { visibility: hidden; }
 
@@ -306,11 +325,27 @@ main { padding: 0 16px 32px; }
   body { font-size: 17px; }
   .calendar { padding: 14px; gap: 10px; grid-template-columns: repeat(3, 1fr); }
   .door .num { font-size: 34px; }
-  .door .label { font-size: 10px; letter-spacing: .08em; }
+  .door .label { font-size: 11px; letter-spacing: .06em; }
   .door.christmas { min-height: 120px; }
   .door.christmas .num { font-size: 42px; }
   .dialog-inner { padding: 36px 20px 20px; }
   .dialog-hint { font-size: 21px; }
+}
+
+/* Short laptop screens: tighten the header so today's door sits closer to the fold */
+@media (max-height: 800px) and (min-width: 521px) {
+  .masthead { padding-top: 24px; padding-bottom: 16px; }
+  .star { width: 56px; height: 56px; }
+  h1 { font-size: clamp(38px, 6vw, 58px); }
+}
+
+/* Phones in landscape: compact dialog so it fits without scrolling */
+@media (max-height: 500px) {
+  .dialog-inner { padding: 20px 28px 8px; }
+  .dialog-day { font-size: 22px; margin-bottom: 8px; }
+  .dialog-hint { font-size: 20px; margin-bottom: 14px; }
+  .dialog-answer { font-size: 19px; padding: 8px; }
+  .dialog-nav { margin-top: 6px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

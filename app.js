@@ -177,6 +177,12 @@
   renderBanner();
   renderCalendar();
 
+  // Bring today's door into view if it is below the fold (late December on phones).
+  const todayDoor = calendarEl.querySelector(".door.today");
+  if (todayDoor && todayDoor.getBoundingClientRect().bottom > innerHeight) {
+    todayDoor.scrollIntoView({ block: "center" });
+  }
+
   fetch(CONTENT_URL, { cache: "no-cache" })
     .then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
     .then(md => { content = parseContent(md); })
