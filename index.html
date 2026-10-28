@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Advent Calendar</title>
+  <meta name="description" content="A daily Advent calendar of gentle Christmas riddles, one door each day from December 1 to Christmas Day.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=IM+Fell+English+SC&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%AD%90%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+  <div class="snow" aria-hidden="true"></div>
+
+  <header class="masthead">
+    <svg class="star" viewBox="0 0 100 100" aria-hidden="true">
+      <defs>
+        <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#fff6d5"/>
+          <stop offset="60%" stop-color="#e8c065"/>
+          <stop offset="100%" stop-color="#b8862b"/>
+        </radialGradient>
+      </defs>
+      <path fill="url(#glow)" d="M50 2 L58 42 L98 50 L58 58 L50 98 L42 58 L2 50 L42 42 Z"/>
+      <path fill="url(#glow)" opacity=".7" d="M50 22 L54 46 L78 50 L54 54 L50 78 L46 54 L22 50 L46 46 Z" transform="rotate(45 50 50)"/>
+    </svg>
+    <p class="eyebrow">O come, O come, Emmanuel</p>
+    <h1>An Advent Calendar</h1>
+    <p class="verse">“The people that walked in darkness have seen a great light.” <span>— Isaiah 9:2</span></p>
+    <p id="status" class="status" role="status"></p>
+  </header>
+
+  <div id="sim-banner" class="sim-banner" hidden></div>
+
+  <main>
+    <ol id="calendar" class="calendar" aria-label="Advent calendar doors"></ol>
+  </main>
+
+  <footer class="footer">
+    <p>Glory to God in the highest, and on earth peace, good will toward men. <span>— Luke 2:14</span></p>
+  </footer>
+
+  <dialog id="door-dialog" class="door-dialog" aria-labelledby="dialog-title">
+    <div class="dialog-inner">
+      <button class="close" type="button" aria-label="Close">×</button>
+      <p class="dialog-day" id="dialog-title"></p>
+      <p class="dialog-hint" id="dialog-hint"></p>
+      <button class="reveal" type="button" id="reveal-btn">Reveal the answer</button>
+      <p class="dialog-answer" id="dialog-answer" hidden></p>
+      <nav class="dialog-nav">
+        <button type="button" id="prev-btn" aria-label="Previous day">‹ Previous</button>
+        <button type="button" id="next-btn" aria-label="Next day">Next ›</button>
+      </nav>
+    </div>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>
